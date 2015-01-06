@@ -31,7 +31,92 @@
 
     <script>
 
+
+
         (function(){
+
+
+    function makeNoise(){
+
+    // cribbed mostly from MDN.
+
+    var audioCtx,
+        error,
+        frameCount,
+        myArrayBuffer,
+        nowBuffering,
+        gainNode,
+        channel,
+        i,
+        source,
+        channels = 1;
+
+
+    if (window.AudioContext) {
+      audioCtx = new window.AudioContext();
+    } else if (window.webkitAudioContext) {
+      audioCtx = new window.webkitAudioContext();
+    }
+
+    if (!audioCtx) {
+      error = "AudioContext is not supported by this browser.";
+    }
+
+    // Create an empty two second stereo buffer at the
+    // sample rate of the AudioContext
+    frameCount = audioCtx.sampleRate * 3.1;
+    myArrayBuffer = audioCtx.createBuffer(channels, frameCount, audioCtx.sampleRate);
+      for (channel = 0; channel < channels; channel++) {
+        nowBuffering = myArrayBuffer.getChannelData(channel);
+        for (i = 0; i < frameCount; i++) {
+          nowBuffering[i] = Math.random() + 2 - 1;
+        }
+      }
+
+  // Get an AudioBufferSourceNode.
+  // This is the AudioNode to use when we want to play an AudioBuffer
+  gainNode = audioCtx.createGain();
+  source = audioCtx.createBufferSource();
+  source.buffer = myArrayBuffer;
+  source.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+  source.loop = true;
+  source.start();
+
+
+var gain = 1;
+    setInterval(function(){
+      gain = (Math.random() + 0.4) * gain;
+      gain = (gain > 1) ? 1 : gain;
+      gain = (gain < 0.3) ? 0.3 : gain;
+
+
+      gainNode.gain.value = gain;
+    }, 60);
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             function drawSnow(ctx, px, imageData, colorFactor){
                 /*
@@ -86,17 +171,22 @@
             var i,
                 x = 800,
                 y = 500,
+                underrun = 0.5,
                 px = x * y,
                 canvas = document.getElementById("Snow"),
                 ctx = canvas.getContext("2d"),
                 imageData = ctx.createImageData(x, y);
 
+            // Using individual pixels is totally unnecessary.
             canvas.style.width = x;
+            canvas.width = underrun * x;
             canvas.style.height = y;
+            canvas.height = underrun * y;
 
             setInterval(function(){
-                drawSnow(ctx, px, imageData, 0.9);
+                drawSnow(ctx, px, imageData, 0);
             }, 60);
+            makeNoise();
 
 
         })();
