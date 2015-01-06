@@ -10,7 +10,8 @@ var SnowCrash = function(opts){
 
   // instance globals.
   var gainNode,
-      gainInterval;
+      gainInterval,
+      cfx = 0;
 
   function modulateGain(){
     var gain = 1;
@@ -140,13 +141,11 @@ var SnowCrash = function(opts){
     imageData = ctx.createImageData(x, y);
 
   // Using individual pixels is totally unnecessary.
-  canvas.style.width = x;
   canvas.width = underrun * x;
-  canvas.style.height = y;
   canvas.height = underrun * y;
 
   setInterval(function(){
-    drawSnow(ctx, px, imageData, 0);
+    drawSnow(ctx, px, imageData, cfx);
   }, 60);
 
   makeNoise();
@@ -154,6 +153,15 @@ var SnowCrash = function(opts){
   return {
     freeze: function(){
       console.log("Stop the snow!");
+    },
+    toggleColor: function(value){
+      if (value !== undefined) {
+        cfx = value;
+      } else if (cfx === 0) {
+        cfx = 0.9;
+      } else {
+        cfx = 0;
+      }
     },
     toggleAudio: function(){
       console.log("Toggle the audio!");

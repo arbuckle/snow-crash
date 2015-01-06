@@ -6,37 +6,83 @@
 
     <style>
         html, body {
-            margin 0 auto;
-            width: 100%;
-            height: 100%;
-            background-color: #3e3e3e;
+          margin: 0;
+          padding: 0;
+          background-color: #3e3e3e;
         }
         .main {
-            margin: 50px auto;
-            text-align: center;
+          margin: 50px auto;
+          padding: 15px 30px;
+          width: 50%;
+          position: relative;
+          z-index: 2;
+          text-align: center;
+          color: white;
+          background-color: rgba(80,80,80,0.6);
+          font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
         }
         .snow {
-            border: 2px solid black;
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          top: 0;
+          left: 0;
+          margin: 0;
         }
+      pre {
+        text-align: left;
+        margin: 0 0 0 30%;
+      }
+
+      a, a:link, a:visited, a:hover {
+        color: whitesmoke;
+        text-decoration: underline;
+
+      }
     </style>
 </head>
 
 <body>
     <div class="main">
-        <h3>Snow Crash</h3>
-        <canvas id="Snow" class="snow"></canvas>
+      <h1>Snow Crash</h1>
+
+      <p>Once upon a time, CRTs gave us static automatically.</p>
+      <p>Today, we generate it by rote.</p>
+      <p>
+        <pre>
+      <code>
+var snow = SnowCrash({
+  el: document.getElementById("Snow"),
+  width: window.innerWidth,
+  height: window.innerHeight,
+  muted: true
+});
+      </code>
+        </pre>
+      </p>
+      <p>
+        To round out your snow crash experience,
+        <a href="#" onclick="javascript:snow.toggleAudio();">enable audio</a>.
+      </p>
+      <p>
+        Wait a minute, this is black and white!
+        <a href="#" onclick="javascript:snow.toggleColor();">I dream in 256 colors</a>.
+      </p>
+
+
     </div>
+    <canvas id="Snow" class="snow"></canvas>
 
     <script src="snow.js"></script>
     <script>
       var snow = SnowCrash({
         el: document.getElementById("Snow"),
-        width: 800,
-        height: 500,
+        width: window.innerWidth,
+        height: window.innerHeight,
         muted: true
       });
       snow.freeze();
-      snow.toggleAudio();
+      //snow.toggleAudio();
 
     </script>
 </body>
