@@ -38,7 +38,7 @@
                     ctx - a 2d context object
                     px - integer value denoting the number of pixels in the canvas.
                     imageData - ctx.imageData object into which pixels are modified.
-                    colorfactor - an integer 0 <= colorFactor < 1 that denotes the degree to which RGB values can vary.  0.5 recommended for color snow crash simulation.
+                    colorfactor - an integer 0 <= colorFactor < 1 that denotes the degree to which RGB values can vary.  0.9 recommended for color snow crash simulation.
                 */
                 var n,
                     mx,
@@ -46,25 +46,37 @@
                     maxSaturation = Math.floor(255 / (1 + multiplier));
                     snow = Math.floor(Math.random() * maxSaturation);
 
-                for (i = 0; i < px; i ++ ) {
-                    n = i * 4; // starting location.  each pixel has 4 slots in the imageData array.  RGBa
 
-                    // R
-                    mx = (multiplier) ? Math.random() + multiplier : 1;
-                    imageData.data[n] = snow * mx;
+                // The multiplier variable indicates that RGB values will diverge, creating the illusion of color.
+                if (multiplier) {
+                    for (i = 0; i < px; i ++ ) {
+                        n = i * 4; // starting location.  each pixel has 4 slots in the imageData array.  RGBa
+                        mx = Math.random() + multiplier;
+                        imageData.data[n] = snow * mx;
 
-                    // G
-                    mx = (multiplier) ? Math.random() + multiplier : 1;
-                    imageData.data[n+1] = snow * mx;
+                        mx = Math.random() + multiplier;
+                        imageData.data[n+1] = snow * mx;
 
-                    // B
-                    mx = (multiplier) ? Math.random() + multiplier : 1;
-                    imageData.data[n+2] = snow * mx;
+                        mx = Math.random() + multiplier;
+                        imageData.data[n+2] = snow * mx;
 
-                    // alpha
-                    imageData.data[n+3] = 255;
+                        imageData.data[n+3] = 255;
 
-                    snow = Math.floor(Math.random() * maxSaturation);
+                        snow = Math.floor(Math.random() * maxSaturation);
+                    }
+
+
+                // Handling the case of a plain black and white snow crash
+                } else {
+                    for (i = 0; i < px; i ++ ) {
+                        n = i * 4; // starting location.  each pixel has 4 slots in the imageData array.  RGBa
+                        imageData.data[n] = snow;       // R
+                        imageData.data[n+1] = snow;     // G
+                        imageData.data[n+2] = snow;     // B
+                        imageData.data[n+3] = 255;      // a
+
+                        snow = Math.floor(Math.random() * 255);
+                    }
                 }
 
                 ctx.putImageData(imageData, 0, 0);
@@ -83,8 +95,8 @@
             canvas.style.height = y;
 
             setInterval(function(){
-                drawSnow(ctx, px, imageData, 0.5);
-            }, 65);
+                drawSnow(ctx, px, imageData, 0.9);
+            }, 60);
 
 
         })();
