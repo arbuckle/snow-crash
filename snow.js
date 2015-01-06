@@ -1,16 +1,42 @@
-(function(){
+var SnowCrash = function(opts){
 
+  // Setting default options.
+  opts.el = opts.el || document.getElementById("Snow");
+  opts.width = opts.width || 800;
+  opts.height = opts.height || 500;
+  opts.muted = (opts.muted === undefined) ? true : opts.muted;
+
+  console.log(opts);
+
+  // instance globals.
+  var gainNode,
+      gainInterval;
+
+  function modulateGain(){
+    var gain = 1;
+    gainInterval = setInterval(function(){
+      gain = (Math.random() + 0.4) * gain;
+      gain = (gain > 1) ? 1 : gain;
+      gain = (gain < 0.3) ? 0.3 : gain;
+
+      gainNode.gain.value = gain;
+    }, 60);
+  }
+
+  function clearGain(){
+    clearInterval(gainInterval);
+    gainNode.gain.value = 0;
+    gainInterval = undefined;
+  }
 
   function makeNoise(){
 
     // cribbed mostly from MDN.
 
     var audioCtx,
-      error,
       frameCount,
       myArrayBuffer,
       nowBuffering,
-      gainNode,
       channel,
       i,
       source,
@@ -24,7 +50,7 @@
     }
 
     if (!audioCtx) {
-      error = "AudioContext is not supported by this browser.";
+      return;
     }
 
     // Create an empty two second stereo buffer at the
@@ -44,44 +70,15 @@
     source = audioCtx.createBufferSource();
     source.buffer = myArrayBuffer;
     source.connect(gainNode);
+    gainNode.gain.value = 0;
     gainNode.connect(audioCtx.destination);
     source.loop = true;
     source.start();
 
-
-    var gain = 1;
-    setInterval(function(){
-      gain = (Math.random() + 0.4) * gain;
-      gain = (gain > 1) ? 1 : gain;
-      gain = (gain < 0.3) ? 0.3 : gain;
-
-
-      gainNode.gain.value = gain;
-    }, 60);
-
-
-
-
+    if (!opts.muted) {
+      gainInterval = modulateGain();
+    }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   function drawSnow(ctx, px, imageData, colorFactor){
     /*
@@ -93,8 +90,8 @@
     var n,
       mx,
       multiplier = colorFactor || 0,
-      maxSaturation = Math.floor(255 / (1 + multiplier));
-    snow = Math.floor(Math.random() * maxSaturation);
+      maxSaturation = Math.floor(255 / (1 + multiplier)),
+      snow = Math.floor(Math.random() * maxSaturation);
 
 
     // The multiplier variable indicates that RGB values will diverge, creating the illusion of color.
@@ -134,11 +131,11 @@
 
 
   var i,
-    x = 800,
-    y = 500,
+    x = opts.width,
+    y = opts.height,
     underrun = 0.5,
     px = x * y,
-    canvas = document.getElementById("Snow"),
+    canvas = opts.el,
     ctx = canvas.getContext("2d"),
     imageData = ctx.createImageData(x, y);
 
@@ -151,7 +148,21 @@
   setInterval(function(){
     drawSnow(ctx, px, imageData, 0);
   }, 60);
+
   makeNoise();
 
+  return {
+    freeze: function(){
+      console.log("Stop the snow!");
+    },
+    toggleAudio: function(){
+      console.log("Toggle the audio!");
+      if (gainInterval) {
+        clearGain();
+      } else {
+        modulateGain();
+      }
+    }
+  }
 
-})();
+};

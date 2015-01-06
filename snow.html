@@ -28,6 +28,17 @@
     </div>
 
     <script src="snow.js"></script>
+    <script>
+      var snow = SnowCrash({
+        el: document.getElementById("Snow"),
+        width: 800,
+        height: 500,
+        muted: true
+      });
+      snow.freeze();
+      snow.toggleAudio();
+
+    </script>
 </body>
 
 </html>
