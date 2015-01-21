@@ -5,10 +5,12 @@ var SnowCrash = function(opts){
   opts.width = opts.width || 800;
   opts.height = opts.height || 500;
   opts.muted = (opts.muted === undefined) ? true : opts.muted;
+  opts.freeze = (opts.freeze === undefined) ? false : opts.freeze;
 
   // instance globals.
   var gainNode,
       gainInterval,
+      snowInterval,
       cfx = 0;
 
   function modulateGain(){
@@ -144,15 +146,31 @@ var SnowCrash = function(opts){
   canvas.width = underrun * x;
   canvas.height = underrun * y;
 
-  setInterval(function(){
-    drawSnow(ctx, px, imageData, cfx);
-  }, 60);
+
+  function makeSnow(){
+    snowInterval = setInterval(function(){
+      drawSnow(ctx, px, imageData, cfx);
+    }, 60);
+  }
+  function clearSnow() {
+    clearInterval(snowInterval);
+    snowInterval = undefined;
+  }
 
   makeNoise();
 
+  if (!opts.freeze) {
+    makeSnow();
+  }
+
   return {
-    freeze: function(){
+    toggleSnow: function(){
       console.log("Stop the snow!");
+      if (snowInterval) {
+        clearSnow();
+      } else {
+        makeSnow();
+      }
     },
     toggleColor: function(value){
       if (value !== undefined) {
