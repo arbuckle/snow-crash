@@ -6,8 +6,6 @@ var SnowCrash = function(opts){
   opts.height = opts.height || 500;
   opts.muted = (opts.muted === undefined) ? true : opts.muted;
 
-  console.log(opts);
-
   // instance globals.
   var gainNode,
       gainInterval,
@@ -81,6 +79,11 @@ var SnowCrash = function(opts){
     }
   }
 
+  var gridIron = [];
+  for (i = 0; i < 18; i ++) {
+    gridIron.push(Math.random() + 0.9);
+  }
+
   function drawSnow(ctx, px, imageData, colorFactor){
     /*
      ctx - a 2d context object
@@ -99,14 +102,11 @@ var SnowCrash = function(opts){
     if (multiplier) {
       for (i = 0; i < px; i ++ ) {
         n = i * 4; // starting location.  each pixel has 4 slots in the imageData array.  RGBa
-        mx = Math.random() + multiplier;
-        imageData.data[n] = snow * mx;
+        mx = Math.floor(Math.random() * 15);
 
-        mx = Math.random() + multiplier;
-        imageData.data[n+1] = snow * mx;
-
-        mx = Math.random() + multiplier;
-        imageData.data[n+2] = snow * mx;
+        imageData.data[n] = snow * gridIron[mx];
+        imageData.data[n+1] = snow * gridIron[mx+1];
+        imageData.data[n+2] = snow * gridIron[mx+2];
 
         imageData.data[n+3] = 255;
 
@@ -158,7 +158,7 @@ var SnowCrash = function(opts){
       if (value !== undefined) {
         cfx = value;
       } else if (cfx === 0) {
-        cfx = 0.9;
+        cfx = 0.95;
       } else {
         cfx = 0;
       }
