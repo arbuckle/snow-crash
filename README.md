@@ -6,6 +6,8 @@ Generate a snow crash anywhere `<canvas>` is supported.
 
 Can also generate random audio noise, anywhere `AudioContext` is supported.
 
+Demo: [http://catto5k.com/static/snow-crash/snow.html](http://catto5k.com/static/snow-crash/snow.html "Snow Crash Demo")
+
 ```
     <canvas id="Snow" class="snow"></canvas>
 
@@ -22,28 +24,35 @@ Can also generate random audio noise, anywhere `AudioContext` is supported.
 
 ## Options
 
-**el** 
+###el
+
 Required. The canvas element in which to generate the snow crash.
 
-**width / height**  
+###width / height
+
 Required. The dimensions of the element.  This will not resize the element.
 
-**muted** 
+###muted
+
 Defaults to true.  Determines whether audio is audible.
 
-**freeze** 
+###freeze
+
 Defaults to false.  Determines whether snow is generated.
 
 
 ## Methods
 
-**toggleSnow()**
+###toggleSnow()
+
 Turns the snow on and off.  Does not clear the canvas.
 
-**toggleAudio()**
+###toggleAudio()
+
 Turns the audio on and off.
 
-**toggleColor()**
+###toggleColor()
+
 Toggles the snow from greyscale to full color.  Suffers performance issues.
 
 
